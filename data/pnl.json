@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "marca": "Cutting Mix",
+    "gerado_em": "2026-08-20",
+    "moeda_base": "USD",
+    "moeda_payout": "EUR",
+    "cambio_eur_usd_medio": null,
+    "cambio_usd_brl": 5.1168,
+    "fuso_horario": "America/Sao_Paulo",
+    "observacoes": [
+      "Receita = Net do payment_transactions (EUR) convertido p/ USD pela taxa implícita de cada transação (Presentment USD / Amount EUR); nunca por constante.",
+      "Moeda base = USD (fornecedor e ads são USD; só a receita chega em EUR).",
+      "Pedidos refunded/voided e brindes saem inteiros (sem pedido, receita nem COGS).",
+      "COGS dedup por (Store, Order Number); Final Price=0 é estimado (cogs_estimado=true), não gratuito.",
+      "ads_usd = ads_meta_usd + ads_google_usd; o painel de mês usa totais_por_mes, nunca totais_fechados.",
+      "dia_parcial=true (dia corrente ou ads não informado) fica fora dos totais, com ads/lucro/margem null."
+    ]
+  },
+  "meses": [
+    "2026-08"
+  ],
+  "totais_por_mes": {
+    "2026-08": {
+      "pedidos": null,
+      "receita_liquida_usd": null,
+      "receita_liquida_brl": null,
+      "cogs_usd": null,
+      "cogs_pct": null,
+      "ads_usd": null,
+      "ads_pct": null,
+      "lucro_usd": null,
+      "lucro_brl": null,
+      "margem_pct": null,
+      "cpa_usd": null,
+      "ticket_liquido_usd": null,
+      "roas": null,
+      "roas_breakeven": null,
+      "dias_fechados": 0,
+      "dias_parciais": 0,
+      "primeiro_dia": "",
+      "ultimo_dia_fechado": "",
+      "mes_completo": false
+    }
+  },
+  "totais_fechados": {
+    "pedidos": null,
+    "receita_liquida_usd": null,
+    "receita_liquida_brl": null,
+    "cogs_usd": null,
+    "cogs_pct": null,
+    "ads_usd": null,
+    "ads_pct": null,
+    "lucro_usd": null,
+    "lucro_brl": null,
+    "margem_pct": null,
+    "cpa_usd": null,
+    "ticket_liquido_usd": null,
+    "roas": null,
+    "roas_breakeven": null,
+    "dias_fechados": 0,
+    "dias_parciais": 0,
+    "primeiro_dia": "",
+    "ultimo_dia_fechado": "",
+    "mes_completo": false
+  },
+  "dias": [],
+  "reembolsos": [],
+  "cancelados": []
+}

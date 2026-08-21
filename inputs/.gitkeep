@@ -1,0 +1,2 @@
+# O Simon larga aqui os exports crus (orders_export.csv, payment_transactions.csv,
+# fornecedor.xls, mercury.csv, ads.csv). Tudo neste diretório é ignorado pelo git.

@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Cutting Mix · Painel</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --ink:#1b1a17; --ink-soft:#4b463d; --ink-faint:#8a8375;
+    --paper:#f6f3ec; --card:#fffdf8; --line:#e2dccd; --line-soft:#efe9db;
+    --teal:#2f7a72;      /* receita / base */
+    --teal-soft:#d6e6e3;
+    --amber:#c6923f;     /* ads / atenção */
+    --amber-soft:#efe1c6;
+    --sage:#5a8a4f;      /* lucro / positivo */
+    --clay:#c8492c;      /* prejuízo / alerta */
+    --plum:#7d5080;      /* pedidos */
+    --slate:#41607a;     /* google / secundário */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .app{max-width:1180px;margin:0 auto;padding:0 22px 72px}
+  .num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  h1,h2{margin:0;font-weight:650;letter-spacing:-.01em}
+  .topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:26px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .brand{display:flex;align-items:baseline;gap:11px}
+  .brand .mark{font-weight:800;font-size:24px;letter-spacing:.1em}
+  .brand .sub{color:var(--ink-faint);font-size:13px}
+  .tabs{display:flex;gap:7px;margin:22px 0 8px}
+  .tab{border:1px solid var(--line);background:transparent;color:var(--ink-soft);font:inherit;font-size:14px;font-weight:600;padding:9px 18px;border-radius:999px;cursor:pointer;transition:.15s}
+  .tab:hover{border-color:var(--ink-faint)}
+  .tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+  .mes-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}
+  .mes-tab{border:1px solid var(--line);background:var(--card);color:var(--ink-soft);font:inherit;font-size:12.5px;font-weight:600;padding:5px 14px;border-radius:999px;cursor:pointer;transition:.15s}
+  .mes-tab:hover{border-color:var(--ink-faint)}
+  .mes-tab.ativo{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:13px;margin-top:6px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(28,26,23,.05)}
+  .kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--line))}
+  .kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-faint);font-weight:700}
+  .kpi .value{font-size:24px;font-weight:650;margin-top:7px;line-height:1.1}
+  .kpi .sub{font-size:12px;color:var(--ink-faint);margin-top:3px}
+  .pos{color:var(--sage)} .neg{color:var(--clay)}
+  .grid{display:grid;gap:15px;margin-top:22px}
+  @media(min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(28,26,23,.05)}
+  .chart-card{padding:16px 16px 10px}
+  .card-title{font-size:15px;font-weight:650}
+  .card-note{font-size:12px;color:var(--ink-faint);margin-top:2px;line-height:1.4}
+  .chart-body{position:relative;height:250px;margin-top:8px}
+  .section{margin-top:24px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .hint{font-size:12.5px;color:var(--ink-faint)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line-soft)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint)}
+  .chip{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;margin-left:6px}
+  .chip-est{background:var(--amber-soft);color:#8a6a1e}
+  .chip-velho{background:var(--clay);color:#fff}
+  .alerta{display:flex;gap:10px;padding:11px 13px;border-radius:10px;margin-bottom:9px;font-size:13.5px;line-height:1.45}
+  .alerta .ico{font-weight:800}
+  .a-alto{background:#f6d9d1;color:#7a2d18}
+  .a-medio{background:var(--amber-soft);color:#7a5a1e}
+  .a-baixo{background:var(--line-soft);color:var(--ink-soft)}
+  .vazio{padding:34px;text-align:center;color:var(--ink-faint);font-size:14px}
+  .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <span class="mark">CUTTING&nbsp;MIX</span>
+      <span class="sub">Painel financeiro · vende USD · payout EUR</span>
+    </div>
+    <div class="hint" id="gerado"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="pnl">Resultado (P&amp;L)</button>
+    <button class="tab" data-tab="caixa">Caixa</button>
+  </div>
+
+  <!-- ============ P&L ============ -->
+  <section id="painel-pnl">
+    <div class="mes-tabs" id="mes-tabs"></div>
+    <div id="pnl-conteudo"></div>
+  </section>
+
+  <!-- ============ CAIXA ============ -->
+  <section id="painel-caixa" class="hidden">
+    <div id="caixa-conteudo"></div>
+  </section>
+
+  <div class="foot">
+    <span id="foot-resumo"></span>
+    <span>USD é a moeda base · R$ só informativo</span>
+  </div>
+</div>
+
+<script>
+const CAMBIO_BRL_FALLBACK = 5.1168;
+const COR = {teal:'#2f7a72',amber:'#c6923f',sage:'#5a8a4f',clay:'#c8492c',plum:'#7d5080',slate:'#41607a',line:'#e2dccd',ink:'#1b1a17'};
+let PNL=null, CAIXA=null, MES=null, brl=CAMBIO_BRL_FALLBACK;
+const charts={};
+
+const fmtUSD = v => (v==null||isNaN(v)) ? '—' : '$'+(+v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtBRL = v => (v==null||isNaN(v)) ? '—' : 'R$ '+(v*brl).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtN   = (v,c=0) => (v==null||isNaN(v)) ? '—' : (+v).toLocaleString('pt-BR',{minimumFractionDigits:c,maximumFractionDigits:c});
+const fmtPct = v => (v==null||isNaN(v)) ? '—' : fmtN(v,1)+'%';
+const diaBR  = d => d ? d.slice(8,10)+'/'+d.slice(5,7) : '';
+const nomeMes = m => { const nm=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']; return nm[+m.slice(5,7)-1]+' '+m.slice(0,4); };
+
+function destruirCharts(){ Object.values(charts).forEach(c=>c&&c.destroy()); }
+
+async function carregar(){
+  const [p,c] = await Promise.all([
+    fetch('data/pnl.json').then(r=>r.json()),
+    fetch('data/caixa.json').then(r=>r.json()).catch(()=>null),
+  ]);
+  PNL=p; CAIXA=c;
+  brl = (p.meta&&p.meta.cambio_usd_brl) || CAMBIO_BRL_FALLBACK;
+  document.getElementById('gerado').textContent = 'Gerado em '+(p.meta?p.meta.gerado_em:'—');
+  MES = p.meses && p.meses.length ? p.meses[p.meses.length-1] : null;
+  renderMesTabs();
+  renderPnl();
+  renderCaixa();
+  renderFoot();
+}
+
+function renderMesTabs(){
+  const el=document.getElementById('mes-tabs'); el.innerHTML='';
+  (PNL.meses||[]).forEach(m=>{
+    const b=document.createElement('button');
+    b.className='mes-tab'+(m===MES?' ativo':'');
+    b.textContent=nomeMes(m);
+    b.onclick=()=>{ MES=m; renderMesTabs(); renderPnl(); };
+    el.appendChild(b);
+  });
+  el.style.display = (PNL.meses||[]).length>1 ? 'flex' : 'none';
+}
+
+function kpi(label,value,sub,accent,cls){
+  return `<div class="kpi" style="--accent:${accent||COR.line}"><div class="label">${label}</div>
+    <div class="value num ${cls||''}">${value}</div>${sub?`<div class="sub num">${sub}</div>`:''}</div>`;
+}
+
+function renderPnl(){
+  const cont=document.getElementById('pnl-conteudo');
+  destruirCharts();
+  const t = (PNL.totais_por_mes&&PNL.totais_por_mes[MES]) || null;
+  const diasMes = (PNL.dias||[]).filter(d=>d.mes===MES);
+  const fechados = diasMes.filter(d=>!d.dia_parcial);   // gráficos só com dias fechados
+
+  if(!t || !fechados.length){
+    cont.innerHTML = `<div class="card vazio">Sem dias fechados em ${MES?nomeMes(MES):'—'} ainda.
+      ${diasMes.length?`(${diasMes.length} dia(s) em andamento — aparecem quando o gasto de ads for informado.)`:''}</div>`;
+    return;
+  }
+  const margemPos = (t.lucro_usd||0)>=0;
+  cont.innerHTML = `
+    <div class="kpi-row">
+      ${kpi('Faturamento', fmtUSD(t.receita_liquida_usd), fmtBRL(t.receita_liquida_usd), COR.teal)}
+      ${kpi('Lucro', fmtUSD(t.lucro_usd), fmtBRL(t.lucro_usd), margemPos?COR.sage:COR.clay, margemPos?'pos':'neg')}
+      ${kpi('Margem', fmtPct(t.margem_pct), t.dias_fechados+' dias fechados', COR.sage)}
+      ${kpi('Pedidos', fmtN(t.pedidos), 'ticket '+fmtUSD(t.ticket_liquido_usd), COR.plum)}
+      ${kpi('CPA', fmtUSD(t.cpa_usd), 'ROAS '+fmtN(t.roas,2)+'×', COR.amber)}
+    </div>
+    <div class="grid cols-2">
+      ${cardChart('Faturamento &amp; lucro','Barras = receita/dia · linha = lucro','c-rec')}
+      ${cardChart('Lucro acumulado','Como o mês foi construído dia a dia','c-acc')}
+      ${cardChart('Ads por fonte','Empilhado: Meta + Google (USD)','c-ads')}
+      ${cardChart('Margem &amp; CPA','Margem sobe quando o CPA cai','c-mcpa')}
+      ${cardChart('ROAS por dia','Linha tracejada = break-even do dia','c-roas')}
+      ${cardChart('Pra onde vai a receita','COGS + Ads + Lucro = receita','c-pizza')}
+    </div>
+    ${tabelaDias(diasMes)}`;
+
+  const labels = fechados.map(d=>diaBR(d.data));
+  const grid={color:'#efe9db'}, tick={color:'#8a8375',font:{size:11}};
+  const baseOpts=extra=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick,beginAtZero:true}},...extra});
+
+  // 1. receita + lucro
+  charts.rec=new Chart(el('c-rec'),{data:{labels,datasets:[
+    {type:'bar',label:'Receita',data:fechados.map(d=>d.receita_liquida_usd),backgroundColor:COR.teal,borderRadius:3,maxBarThickness:26},
+    {type:'line',label:'Lucro',data:fechados.map(d=>d.lucro_usd),borderColor:COR.amber,backgroundColor:COR.amber,borderWidth:2.6,pointRadius:2.5,tension:.25},
+  ]},options:baseOpts({plugins:{legend:{display:false},tooltip:tt(fechados)}})});
+
+  // 2. lucro acumulado
+  charts.acc=new Chart(el('c-acc'),{type:'line',data:{labels,datasets:[
+    {label:'Acumulado',data:fechados.map(d=>d.lucro_acumulado_usd),borderColor:COR.sage,backgroundColor:'rgba(90,138,79,.12)',fill:true,borderWidth:2.6,pointRadius:2,tension:.25}]},
+    options:baseOpts({scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick}}})});
+
+  // 3. ads empilhado (google null = desconhecido, não zero)
+  charts.ads=new Chart(el('c-ads'),{type:'bar',data:{labels,datasets:[
+    {label:'Meta',data:fechados.map(d=>d.ads_meta_usd),backgroundColor:COR.amber,borderRadius:3,maxBarThickness:26,stack:'a'},
+    {label:'Google',data:fechados.map(d=>d.ads_google_usd==null?null:d.ads_google_usd),backgroundColor:COR.slate,borderRadius:3,maxBarThickness:26,stack:'a'},
+  ]},options:baseOpts({plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:tick,beginAtZero:true}}})});
+
+  // 4. margem vs cpa (dois eixos)
+  charts.mcpa=new Chart(el('c-mcpa'),{data:{labels,datasets:[
+    {type:'bar',label:'Margem %',yAxisID:'m',data:fechados.map(d=>d.margem_pct),backgroundColor:fechados.map(d=>(d.margem_pct||0)>=0?COR.sage:COR.clay),borderRadius:3,maxBarThickness:26},
+    {type:'line',label:'CPA',yAxisID:'c',data:fechados.map(d=>d.cpa_usd),borderColor:COR.amber,borderWidth:2.4,pointRadius:2.5,tension:.25},
+  ]},options:baseOpts({scales:{x:{grid:{display:false},ticks:tick},
+    m:{position:'left',grid,ticks:{...tick,callback:v=>v+'%'}},
+    c:{position:'right',grid:{display:false},ticks:{...tick,callback:v=>'$'+v}}}})});
+
+  // 5. roas + breakeven diário (referência por dia, não constante)
+  charts.roas=new Chart(el('c-roas'),{data:{labels,datasets:[
+    {type:'bar',label:'ROAS',data:fechados.map(d=>d.roas),backgroundColor:fechados.map(d=>roasCor(d)),borderRadius:3,maxBarThickness:26},
+    {type:'line',label:'Break-even',data:fechados.map(d=>d.roas_breakeven_dia),borderColor:COR.ink,borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
+  ]},options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{afterBody:(it)=>{const d=fechados[it[0].dataIndex];return 'break-even '+fmtN(d.roas_breakeven_dia,2)+'×';}}}}})});
+
+  // 6. pizza composição
+  const comp=[Math.max(t.cogs_usd,0),Math.max(t.ads_usd,0),Math.max(t.lucro_usd,0)];
+  charts.pizza=new Chart(el('c-pizza'),{type:'doughnut',data:{labels:['COGS','Ads','Lucro'],
+    datasets:[{data:comp,backgroundColor:[COR.clay,COR.amber,COR.sage],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:12}}},
+      tooltip:{callbacks:{label:c=>c.label+': '+fmtUSD(c.raw)+' ('+fmtN(c.raw/t.receita_liquida_usd*100,1)+'%)'}}}}});
+}
+
+function roasCor(d){ const be=d.roas_breakeven_dia; if(d.roas==null)return COR.line; return (be&&d.roas>=be)?COR.sage:COR.clay; }
+function tt(fechados){return {callbacks:{label:c=>c.dataset.label+': '+fmtUSD(c.raw)}};}
+function cardChart(t,n,id){return `<div class="card chart-card"><div class="card-title">${t}</div><div class="card-note">${n}</div><div class="chart-body"><canvas id="${id}"></canvas></div></div>`;}
+function el(id){return document.getElementById(id);}
+
+function tabelaDias(dias){
+  const linhas = dias.map(d=>{
+    const parc = d.dia_parcial;
+    return `<tr>
+      <td>${diaBR(d.data)}${d.cogs_estimado?'<span class="chip chip-est">COGS estimado</span>':''}${parc?'<span class="chip chip-est">parcial</span>':''}</td>
+      <td class="num">${fmtN(d.pedidos)}</td>
+      <td class="num">${fmtUSD(d.receita_liquida_usd)}</td>
+      <td class="num">${fmtUSD(d.cogs_usd)}</td>
+      <td class="num">${parc?'—':fmtUSD(d.ads_usd)}</td>
+      <td class="num">${parc?'—':fmtPct(d.margem_pct)}</td>
+      <td class="num ${(d.lucro_usd||0)>=0?'pos':'neg'}">${parc?'—':fmtUSD(d.lucro_usd)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="section"><div class="section-head"><h2>Dias</h2><span class="hint">receita em USD (base) · payout chega em EUR</span></div>
+    <div class="card" style="padding:6px 8px;overflow-x:auto"><table>
+      <thead><tr><th>Dia</th><th>Ped.</th><th>Receita</th><th>COGS</th><th>Ads</th><th>Margem</th><th>Lucro</th></tr></thead>
+      <tbody>${linhas}</tbody></table></div></div>`;
+}
+
+/* ---------------- CAIXA ---------------- */
+function renderCaixa(){
+  const cont=document.getElementById('caixa-conteudo');
+  if(!CAIXA){ cont.innerHTML='<div class="card vazio">Sem dados de caixa.</div>'; return; }
+  const s=CAIXA.saldos, proj=CAIXA.projecao||[], fila=CAIXA.fila_fornecedor||{};
+  const semDados = !s.caixa_usd && !(CAIXA.entradas_detalhe||[]).length;
+
+  cont.innerHTML = `
+    <div class="kpi-row">
+      ${kpi('Disponível hoje', fmtUSD(s.disponivel_usd), 'caixa − cartão · livre '+fmtUSD(s.livre_hoje_usd), COR.teal)}
+      ${kpi('Retido Shopify', fmtUSD(s.retido_shopify_usd), 'não é caixa hoje', COR.amber)}
+      ${kpi('Entradas futuras', fmtUSD(s.entradas_futuras_usd), 'payouts EUR→USD', COR.slate)}
+      ${kpi('Teto de pagamento', fmtUSD(fila.teto_pagamento_hoje_usd), 'piso '+fmtUSD(s.piso_usd), COR.plum)}
+    </div>
+    ${semDados?'<div class="card vazio" style="margin-top:16px">Saldos ainda não informados. Preencha <code>inputs/saldos.json</code> e rode <code>npm run gerar</code>.</div>':''}
+    <div class="grid"><div class="card chart-card">
+      <div class="card-title">Projeção de 8 dias</div>
+      <div class="card-note">Barra = saldo projetado · linha = piso (${fmtUSD(s.piso_usd)}) · vermelho abaixo do piso · ⚠ colisão de ads</div>
+      <div class="chart-body" style="height:270px"><canvas id="c-proj"></canvas></div>
+    </div></div>
+    ${alertasHtml(CAIXA.alertas)}
+    ${filaHtml(fila)}`;
+
+  if(charts.proj)charts.proj.destroy();
+  if(proj.length){
+    const labels=proj.map(p=>diaBR(p.data)+(p.fim_de_semana?' •':''));
+    charts.proj=new Chart(el('c-proj'),{type:'bar',data:{labels,datasets:[
+      {label:'Saldo',data:proj.map(p=>p.saldo_usd),backgroundColor:proj.map(p=>p.abaixo_piso?COR.clay:(p.colisao?COR.amber:COR.teal)),borderRadius:3,maxBarThickness:34},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>fmtUSD(c.raw),afterBody:it=>{const p=proj[it[0].dataIndex];const l=[];if(p.entrada_usd)l.push('entra '+fmtUSD(p.entrada_usd));if(p.saida_ads_usd)l.push('ads −'+fmtUSD(p.saida_ads_usd));if(p.colisao)l.push('⚠ colisão de ads');if(p.abaixo_piso)l.push('abaixo do piso');return l;}}}},
+      scales:{x:{grid:{display:false},ticks:{color:'#8a8375',font:{size:11}}},
+        y:{grid:{color:'#efe9db'},ticks:{color:'#8a8375',font:{size:11},callback:v=>'$'+v}}}}});
+    // linha do piso via plugin simples
+    const piso=s.piso_usd;
+    charts.proj.options.plugins.pisoLine=piso;
+  }
+}
+
+function alertasHtml(al){
+  if(!al||!al.length)return '';
+  const ico={alto:'▲',medio:'▲',baixo:'i'};
+  return `<div class="section"><div class="section-head"><h2>Alertas</h2></div>`+
+    al.map(a=>`<div class="alerta a-${a.nivel}"><span class="ico">${ico[a.nivel]||'i'}</span><span>${a.texto}</span></div>`).join('')+`</div>`;
+}
+
+function filaHtml(f){
+  if(!f||!f.pedidos)return `<div class="section"><div class="section-head"><h2>Fila do fornecedor</h2><span class="hint">nada pendente</span></div></div>`;
+  const linhas=(f.por_dia||[]).map(d=>{
+    const idade = d.data ? Math.round((Date.now()-new Date(d.data))/86400000) : 0;
+    const velho = idade>5;
+    return `<tr><td>${diaBR(d.data)||'s/ data'}${velho?'<span class="chip chip-velho">'+idade+'d</span>':''}</td>
+      <td class="num">${fmtN(d.pedidos)}</td><td class="num">${fmtUSD(d.total_usd)}</td></tr>`;
+  }).join('');
+  return `<div class="section"><div class="section-head"><h2>Fila do fornecedor</h2>
+    <span class="hint">${f.pedidos} pedidos · ${fmtUSD(f.total_usd)} · pagar hoje até ${fmtUSD(f.teto_pagamento_hoje_usd)}</span></div>
+    <div class="card" style="padding:6px 8px;overflow-x:auto"><table>
+      <thead><tr><th>Dia do pedido</th><th>Pedidos</th><th>Total</th></tr></thead><tbody>${linhas}</tbody></table></div>
+    ${f.sem_cotacao&&f.sem_cotacao.length?`<div class="card-note" style="margin-top:8px">${f.sem_cotacao.length} pedido(s) sem cotação — o total real é maior.</div>`:''}</div>`;
+}
+
+function renderFoot(){
+  const t=(PNL.totais_por_mes&&PNL.totais_por_mes[MES])||{};
+  document.getElementById('foot-resumo').textContent =
+    (MES?nomeMes(MES):'—')+' · '+(t.dias_fechados||0)+' dias fechados · lucro '+fmtUSD(t.lucro_usd);
+}
+
+// linha do piso na projeção (plugin global leve)
+Chart.register({id:'pisoLine',afterDraw(c){const p=c.options.plugins&&c.options.plugins.pisoLine;if(p==null)return;
+  const y=c.scales.y.getPixelForValue(p);const{left,right}=c.chartArea;const ctx=c.ctx;ctx.save();
+  ctx.strokeStyle='#7d5080';ctx.setLineDash([6,4]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(right,y);ctx.stroke();ctx.restore();}});
+
+// troca de abas
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+  const t=b.dataset.tab;
+  document.getElementById('painel-pnl').classList.toggle('hidden',t!=='pnl');
+  document.getElementById('painel-caixa').classList.toggle('hidden',t!=='caixa');
+});
+
+carregar().catch(e=>{document.getElementById('pnl-conteudo').innerHTML='<div class="card vazio">Erro ao carregar os dados: '+e.message+'</div>';});
+</script>
+</body>
+</html>
