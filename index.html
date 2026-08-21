@@ -162,6 +162,8 @@ function renderPnl(){
     return;
   }
   const margemPos = (t.lucro_usd||0)>=0;
+  // alguns exports trazem ads separado por fonte (Meta/Google), outros só o total
+  const temSplit = fechados.some(d=>d.ads_meta_usd!=null||d.ads_google_usd!=null);
   cont.innerHTML = `
     <div class="kpi-row">
       ${kpi('Faturamento', fmtUSD(t.receita_liquida_usd), fmtBRL(t.receita_liquida_usd), COR.teal)}
@@ -173,7 +175,7 @@ function renderPnl(){
     <div class="grid cols-2">
       ${cardChart('Faturamento &amp; lucro','Barras = receita/dia · linha = lucro','c-rec')}
       ${cardChart('Lucro acumulado','Como o mês foi construído dia a dia','c-acc')}
-      ${cardChart('Ads por fonte','Empilhado: Meta + Google (USD)','c-ads')}
+      ${cardChart('Ads por dia', temSplit?'Empilhado por fonte: Meta + Google (USD)':'Gasto de ads por dia (USD)','c-ads')}
       ${cardChart('Margem &amp; CPA','Margem sobe quando o CPA cai','c-mcpa')}
       ${cardChart('ROAS por dia','Linha tracejada = break-even do dia','c-roas')}
       ${cardChart('Pra onde vai a receita','COGS + Ads + Lucro = receita','c-pizza')}
@@ -196,11 +198,15 @@ function renderPnl(){
     {label:'Acumulado',data:fechados.map(d=>d.lucro_acumulado_usd),borderColor:COR.sage,backgroundColor:'rgba(90,138,79,.12)',fill:true,borderWidth:2.6,pointRadius:2,tension:.25}]},
     options:baseOpts({scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick}}})});
 
-  // 3. ads empilhado (google null = desconhecido, não zero)
-  charts.ads=new Chart(el('c-ads'),{type:'bar',data:{labels,datasets:[
+  // 3. ads — empilhado por fonte quando há split; senão barra única (google null = desconhecido, não zero)
+  const dsAds = temSplit ? [
     {label:'Meta',data:fechados.map(d=>d.ads_meta_usd),backgroundColor:COR.amber,borderRadius:3,maxBarThickness:26,stack:'a'},
     {label:'Google',data:fechados.map(d=>d.ads_google_usd==null?null:d.ads_google_usd),backgroundColor:COR.slate,borderRadius:3,maxBarThickness:26,stack:'a'},
-  ]},options:baseOpts({plugins:{legend:{display:true,labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:tick,beginAtZero:true}}})});
+  ] : [
+    {label:'Ads',data:fechados.map(d=>d.ads_usd),backgroundColor:COR.amber,borderRadius:3,maxBarThickness:26,stack:'a'},
+  ];
+  charts.ads=new Chart(el('c-ads'),{type:'bar',data:{labels,datasets:dsAds},
+    options:baseOpts({plugins:{legend:{display:temSplit,labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:tick,beginAtZero:true}}})});
 
   // 4. margem vs cpa (dois eixos)
   charts.mcpa=new Chart(el('c-mcpa'),{data:{labels,datasets:[
