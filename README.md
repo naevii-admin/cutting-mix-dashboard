@@ -13,55 +13,25 @@ Caixa é **separado** do da Naevii. Nenhum rateio de conta compartilhada.
 
 ---
 
-## Como atualizar (o dia a dia do Simon)
+## Como atualizar (o dia a dia)
 
-1. **Exportar os 4 arquivos** e jogar em `inputs/` (a pasta é ignorada pelo git):
+O P&L (`data/pnl.json`) e o caixa (`data/caixa.json`) vêm do **pipeline de análise**
+(a mesma ferramenta usada na Naevii). O fluxo é: o pipeline gera o JSON → o conteúdo é
+escrito em `data/` → publica. **O `publicar` só faz commit + push — não regenera nada**,
+pra nunca apagar os dados.
 
-   | arquivo | onde exportar | serve pra |
-   |---|---|---|
-   | `orders_export.csv` | Shopify → Pedidos → Exportar | data e status financeiro do pedido |
-   | `payment_transactions.csv` | Shopify → Finanças → Transações | **fonte de verdade** da receita (Net), entradas futuras, refunds/chargebacks |
-   | `fornecedor.xls` | painel do fornecedor | COGS por pedido e fila de pagamento |
-   | `ads.csv` | você digita | gasto de ads por dia e por conta |
+```bash
+npm run publicar
+```
 
-   Os scripts pegam **o arquivo mais recente** de cada tipo por padrão de nome (glob),
-   então pode deixar os antigos na pasta — vale sempre o mais novo.
+Isso dá `git add -A`, um commit `dados DD/MM` e `git push` (só se houver mudança). A Vercel
+rebuilda sozinha em ~1 min.
 
-2. **`ads.csv`** — uma linha por dia e por conta:
-   ```csv
-   data,conta,valor_usd
-   2026-08-20,Meta 1,80.00
-   2026-08-20,Meta 2,90.00
-   2026-08-20,Google,30.00
-   ```
-   Enquanto um dia não tiver ads informado, ele fica **parcial** (fora dos totais).
-
-3. **`inputs/saldos.json`** — os números que só você sabe (saldos do banco e dos ads):
-   ```json
-   {
-     "caixa_usd": 0,
-     "caixa_eur": 0,
-     "saldo_devedor_cartao_usd": 0,
-     "retido_shopify_usd": 0,
-     "contas_ads": [
-       {"nome": "Meta 1", "threshold_usd": 300, "acumulado_usd": 0, "gasto_diario_usd": 0},
-       {"nome": "Meta 2", "threshold_usd": 300, "acumulado_usd": 0, "gasto_diario_usd": 0},
-       {"nome": "Google",  "threshold_usd": 200, "acumulado_usd": 0, "gasto_diario_usd": 0}
-     ]
-   }
-   ```
-   - `caixa_usd` = savings + checking. `saldo_devedor_cartao_usd` é **subtraído** (o
-     disponível real é `caixa − saldo devedor`).
-   - `threshold_usd` = valor em que o Meta/Google cobra o cartão; `acumulado_usd` = quanto
-     já acumulou; `gasto_diario_usd` = ritmo de gasto. É o que prevê a **cobrança** e a **colisão**.
-
-4. **Publicar:**
-   ```bash
-   npm run publicar
-   ```
-   Isso roda os dois geradores (`npm run gerar`), dá commit e push. A Vercel rebuilda sozinha.
-
-   Só gerar sem publicar: `npm run gerar`.
+> Os scripts Python (`scripts/gerar_pnl.py`, `scripts/gerar_caixa.py`) e o comando
+> `npm run gerar` ficam no repo como **referência/opcional** — um caminho alternativo que lê
+> CSVs crus de `inputs/` (Shopify + fornecedor + `ads.csv` + `saldos.json`). Não fazem parte
+> do fluxo de publicação atual. Se um dia quiser gerar a partir dos CSVs, o `gerar_pnl.py`
+> precisa ser adaptado ao formato do export atual (JXdropshipping: Buyer Payment Amount + Total cost).
 
 ---
 

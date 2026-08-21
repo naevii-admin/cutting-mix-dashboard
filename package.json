@@ -4,7 +4,7 @@
   "private": true,
   "description": "Dashboard de P&L e caixa da Cutting Mix Drink (vende USD, recebe payout EUR).",
   "scripts": {
-    "gerar": "python3 scripts/gerar_pnl.py && python3 scripts/gerar_caixa.py",
-    "publicar": "npm run gerar && git add -A && git commit -m \"update dados\" && git push"
+    "publicar": "node scripts/publicar.mjs",
+    "gerar": "python3 scripts/gerar_pnl.py && python3 scripts/gerar_caixa.py"
   }
 }
