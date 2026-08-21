@@ -183,51 +183,58 @@ function renderPnl(){
     ${tabelaDias(diasMes)}`;
 
   const labels = fechados.map(d=>diaBR(d.data));
-  const grid={color:'#efe9db'}, tick={color:'#8a8375',font:{size:11}};
+  // FRESH por gráfico: o Chart.js muta objetos de opção compartilhados na init, o que
+  // fazia só o 1º gráfico renderizar. gy()/tk() devolvem um objeto novo a cada uso.
+  const gy=()=>({color:'#efe9db'});
+  const tk=()=>({color:'#8a8375',font:{size:11}});
   const baseOpts=extra=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick,beginAtZero:true}},...extra});
+    scales:{x:{grid:{display:false},ticks:tk()},y:{grid:gy(),ticks:tk(),beginAtZero:true}},...extra});
 
-  // 1. receita + lucro
-  charts.rec=new Chart(el('c-rec'),{data:{labels,datasets:[
-    {type:'bar',label:'Receita',data:fechados.map(d=>d.receita_liquida_usd),backgroundColor:COR.teal,borderRadius:3,maxBarThickness:26},
-    {type:'line',label:'Lucro',data:fechados.map(d=>d.lucro_usd),borderColor:COR.amber,backgroundColor:COR.amber,borderWidth:2.6,pointRadius:2.5,tension:.25},
-  ]},options:baseOpts({plugins:{legend:{display:false},tooltip:tt(fechados)}})});
-
-  // 2. lucro acumulado
-  charts.acc=new Chart(el('c-acc'),{type:'line',data:{labels,datasets:[
-    {label:'Acumulado',data:fechados.map(d=>d.lucro_acumulado_usd),borderColor:COR.sage,backgroundColor:'rgba(90,138,79,.12)',fill:true,borderWidth:2.6,pointRadius:2,tension:.25}]},
-    options:baseOpts({scales:{x:{grid:{display:false},ticks:tick},y:{grid,ticks:tick}}})});
-
-  // 3. ads — empilhado por fonte quando há split; senão barra única (google null = desconhecido, não zero)
   const dsAds = temSplit ? [
     {label:'Meta',data:fechados.map(d=>d.ads_meta_usd),backgroundColor:COR.amber,borderRadius:3,maxBarThickness:26,stack:'a'},
     {label:'Google',data:fechados.map(d=>d.ads_google_usd==null?null:d.ads_google_usd),backgroundColor:COR.slate,borderRadius:3,maxBarThickness:26,stack:'a'},
   ] : [
     {label:'Ads',data:fechados.map(d=>d.ads_usd),backgroundColor:COR.amber,borderRadius:3,maxBarThickness:26,stack:'a'},
   ];
-  charts.ads=new Chart(el('c-ads'),{type:'bar',data:{labels,datasets:dsAds},
-    options:baseOpts({plugins:{legend:{display:temSplit,labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:tick},y:{stacked:true,grid,ticks:tick,beginAtZero:true}}})});
-
-  // 4. margem vs cpa (dois eixos)
-  charts.mcpa=new Chart(el('c-mcpa'),{data:{labels,datasets:[
-    {type:'bar',label:'Margem %',yAxisID:'m',data:fechados.map(d=>d.margem_pct),backgroundColor:fechados.map(d=>(d.margem_pct||0)>=0?COR.sage:COR.clay),borderRadius:3,maxBarThickness:26},
-    {type:'line',label:'CPA',yAxisID:'c',data:fechados.map(d=>d.cpa_usd),borderColor:COR.amber,borderWidth:2.4,pointRadius:2.5,tension:.25},
-  ]},options:baseOpts({scales:{x:{grid:{display:false},ticks:tick},
-    m:{position:'left',grid,ticks:{...tick,callback:v=>v+'%'}},
-    c:{position:'right',grid:{display:false},ticks:{...tick,callback:v=>'$'+v}}}})});
-
-  // 5. roas + breakeven diário (referência por dia, não constante)
-  charts.roas=new Chart(el('c-roas'),{data:{labels,datasets:[
-    {type:'bar',label:'ROAS',data:fechados.map(d=>d.roas),backgroundColor:fechados.map(d=>roasCor(d)),borderRadius:3,maxBarThickness:26},
-    {type:'line',label:'Break-even',data:fechados.map(d=>d.roas_breakeven_dia),borderColor:COR.ink,borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
-  ]},options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{afterBody:(it)=>{const d=fechados[it[0].dataIndex];return 'break-even '+fmtN(d.roas_breakeven_dia,2)+'×';}}}}})});
-
-  // 6. pizza composição
   const comp=[Math.max(t.cogs_usd,0),Math.max(t.ads_usd,0),Math.max(t.lucro_usd,0)];
-  charts.pizza=new Chart(el('c-pizza'),{type:'doughnut',data:{labels:['COGS','Ads','Lucro'],
-    datasets:[{data:comp,backgroundColor:[COR.clay,COR.amber,COR.sage],borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:12}}},
-      tooltip:{callbacks:{label:c=>c.label+': '+fmtUSD(c.raw)+' ('+fmtN(c.raw/t.receita_liquida_usd*100,1)+'%)'}}}}});
+
+  // cria tudo no próximo frame, com o layout do innerHTML já pronto
+  requestAnimationFrame(()=>{
+    // 1. receita + lucro
+    charts.rec=new Chart(el('c-rec'),{data:{labels,datasets:[
+      {type:'bar',label:'Receita',data:fechados.map(d=>d.receita_liquida_usd),backgroundColor:COR.teal,borderRadius:3,maxBarThickness:26},
+      {type:'line',label:'Lucro',data:fechados.map(d=>d.lucro_usd),borderColor:COR.amber,backgroundColor:COR.amber,borderWidth:2.6,pointRadius:2.5,tension:.25},
+    ]},options:baseOpts({plugins:{legend:{display:false},tooltip:tt(fechados)}})});
+
+    // 2. lucro acumulado
+    charts.acc=new Chart(el('c-acc'),{type:'line',data:{labels,datasets:[
+      {label:'Acumulado',data:fechados.map(d=>d.lucro_acumulado_usd),borderColor:COR.sage,backgroundColor:'rgba(90,138,79,.12)',fill:true,borderWidth:2.6,pointRadius:2,tension:.25}]},
+      options:baseOpts({scales:{x:{grid:{display:false},ticks:tk()},y:{grid:gy(),ticks:tk()}}})});
+
+    // 3. ads (empilhado por fonte se houver split; senão barra única)
+    charts.ads=new Chart(el('c-ads'),{type:'bar',data:{labels,datasets:dsAds},
+      options:baseOpts({plugins:{legend:{display:temSplit,labels:{boxWidth:12,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false},ticks:tk()},y:{stacked:true,grid:gy(),ticks:tk(),beginAtZero:true}}})});
+
+    // 4. margem vs cpa (dois eixos)
+    charts.mcpa=new Chart(el('c-mcpa'),{data:{labels,datasets:[
+      {type:'bar',label:'Margem %',yAxisID:'m',data:fechados.map(d=>d.margem_pct),backgroundColor:fechados.map(d=>(d.margem_pct||0)>=0?COR.sage:COR.clay),borderRadius:3,maxBarThickness:26},
+      {type:'line',label:'CPA',yAxisID:'c',data:fechados.map(d=>d.cpa_usd),borderColor:COR.amber,borderWidth:2.4,pointRadius:2.5,tension:.25},
+    ]},options:baseOpts({scales:{x:{grid:{display:false},ticks:tk()},
+      m:{position:'left',grid:gy(),ticks:{...tk(),callback:v=>v+'%'}},
+      c:{position:'right',grid:{display:false},ticks:{...tk(),callback:v=>'$'+v}}}})});
+
+    // 5. roas + breakeven diário (referência por dia, não constante)
+    charts.roas=new Chart(el('c-roas'),{data:{labels,datasets:[
+      {type:'bar',label:'ROAS',data:fechados.map(d=>d.roas),backgroundColor:fechados.map(d=>roasCor(d)),borderRadius:3,maxBarThickness:26},
+      {type:'line',label:'Break-even',data:fechados.map(d=>d.roas_breakeven_dia),borderColor:COR.ink,borderDash:[5,4],borderWidth:1.5,pointRadius:0,tension:0},
+    ]},options:baseOpts({plugins:{legend:{display:false},tooltip:{callbacks:{afterBody:(it)=>{const d=fechados[it[0].dataIndex];return 'break-even '+fmtN(d.roas_breakeven_dia,2)+'×';}}}}})});
+
+    // 6. pizza composição
+    charts.pizza=new Chart(el('c-pizza'),{type:'doughnut',data:{labels:['COGS','Ads','Lucro'],
+      datasets:[{data:comp,backgroundColor:[COR.clay,COR.amber,COR.sage],borderWidth:0}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:12}}},
+        tooltip:{callbacks:{label:c=>c.label+': '+fmtUSD(c.raw)+' ('+fmtN(c.raw/t.receita_liquida_usd*100,1)+'%)'}}}}});
+  });
 }
 
 function roasCor(d){ const be=d.roas_breakeven_dia; if(d.roas==null)return COR.line; return (be&&d.roas>=be)?COR.sage:COR.clay; }
