@@ -276,13 +276,10 @@ function renderCaixa(){
     const labels=proj.map(p=>diaBR(p.data)+(p.fim_de_semana?' •':''));
     charts.proj=new Chart(el('c-proj'),{type:'bar',data:{labels,datasets:[
       {label:'Saldo',data:proj.map(p=>p.saldo_usd),backgroundColor:proj.map(p=>p.abaixo_piso?COR.clay:(p.colisao?COR.amber:COR.teal)),borderRadius:3,maxBarThickness:34},
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},pisoLine:s.piso_usd,
       tooltip:{callbacks:{label:c=>fmtUSD(c.raw),afterBody:it=>{const p=proj[it[0].dataIndex];const l=[];if(p.entrada_usd)l.push('entra '+fmtUSD(p.entrada_usd));if(p.saida_ads_usd)l.push('ads −'+fmtUSD(p.saida_ads_usd));if(p.colisao)l.push('⚠ colisão de ads');if(p.abaixo_piso)l.push('abaixo do piso');return l;}}}},
       scales:{x:{grid:{display:false},ticks:{color:'#8a8375',font:{size:11}}},
         y:{grid:{color:'#efe9db'},ticks:{color:'#8a8375',font:{size:11},callback:v=>'$'+v}}}}});
-    // linha do piso via plugin simples
-    const piso=s.piso_usd;
-    charts.proj.options.plugins.pisoLine=piso;
   }
 }
 
