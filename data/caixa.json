@@ -1,147 +1,28 @@
 {
   "meta": {
     "marca": "Lunic Home",
-    "mes": "2026-08",
-    "gerado_em": "2026-08-20",
-    "piso_caixa_usd": 750.0,
-    "observacoes": [
-      "Entradas = Net por Payout Date (pending+scheduled+in_transit), convertido EUR->USD pela taxa implícita; NÃO usar o export de payouts.",
-      "Payout de sábado/domingo credita na segunda (banco não credita no fim de semana).",
-      "Disponível = savings+checking - saldo devedor do cartão. Cartão liquida em D+1.",
-      "Cobrança de ads prevista por threshold; colisão = 2+ contas no mesmo dia.",
-      "Reserva Shopify e valores retidos não são caixa disponível hoje."
-    ]
+    "conta": "",
+    "periodo": "",
+    "moeda_base": "EUR",
+    "cambio_eur_usd": 0,
+    "cambio_usd_brl": 5.1,
+    "observacoes": []
   },
-  "saldos": {
-    "caixa_usd": 0.0,
-    "caixa_eur": 0.0,
-    "saldo_devedor_cartao_usd": 0.0,
-    "disponivel_usd": 0.0,
-    "piso_usd": 750.0,
-    "livre_hoje_usd": 0.0,
-    "retido_shopify_usd": 0.0,
-    "entradas_futuras_usd": 0.0
+  "saldo_atual": {
+    "eur": 0,
+    "usd": 0,
+    "brl": 0
   },
-  "entradas_detalhe": [],
-  "ads_contas": [],
-  "colisoes": [],
-  "projecao": [
-    {
-      "data": "2026-08-20",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": true
-    },
-    {
-      "data": "2026-08-21",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-22",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": true,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-23",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": true,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-24",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-25",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-26",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": false
-    },
-    {
-      "data": "2026-08-27",
-      "entrada_usd": 0.0,
-      "saida_ads_usd": 0.0,
-      "saldo_usd": 0.0,
-      "vs_piso_usd": -750.0,
-      "abaixo_piso": true,
-      "colisao": false,
-      "fim_de_semana": false,
-      "entrada_confirmada": false,
-      "hoje": false
-    }
-  ],
-  "fila_fornecedor": {
-    "pedidos": 0,
-    "total_usd": 0,
-    "idade_min_dias": 0,
-    "idade_max_dias": 0,
-    "por_dia": [],
-    "teto_pagamento_hoje_usd": 0.0,
-    "pagar_hoje": [],
-    "pagar_hoje_total_usd": 0,
-    "sem_cotacao": [],
-    "bloqueados_pedidos": 0,
-    "bloqueados_total_usd": 0
+  "resumo": {
+    "entrou_eur": 0,
+    "saiu_ads_eur": 0,
+    "saiu_pedidos_eur": 0,
+    "saiu_brl_eur": 0,
+    "saiu_outras_eur": 0,
+    "liquido_eur": 0,
+    "dias": 0
   },
-  "regime_diario": {
-    "entrada_usd": 0,
-    "ads_usd": 0,
-    "cogs_novo_usd": 0,
-    "sobra_livre_usd": 0,
-    "dias_para_zerar_fila": 0
-  },
-  "alertas": []
+  "fornecedor": null,
+  "saldo_diario": [],
+  "movimentacoes": []
 }

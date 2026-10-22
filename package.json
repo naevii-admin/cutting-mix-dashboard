@@ -1,10 +1,25 @@
 {
-  "name": "cutting-mix-dashboard",
-  "version": "1.0.0",
+  "name": "lunic-home-dashboard",
   "private": true,
-  "description": "Dashboard de P&L e caixa da Lunic Home (vende USD, recebe payout EUR).",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "publicar": "node scripts/publicar.mjs",
-    "gerar": "python3 scripts/gerar_pnl.py && python3 scripts/gerar_caixa.py"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "publicar": "node scripts/publicar.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "recharts": "^3.9.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "oxlint": "^1.71.0",
+    "vite": "^8.1.1"
   }
 }
