@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Configuração da Cutting Mix — ÚNICO lugar que o Simon edita.
+# Configuração da Lunic Home — ÚNICO lugar que o Simon edita.
 #
 # Moeda: a marca VENDE em USD e RECEBE payout em EUR (o inverso da Naevii).
 # Fornecedor (dropship) e ads são em USD. Logo a moeda base do P&L e do caixa
@@ -7,7 +7,7 @@
 # taxa real do payout — NUNCA por uma constante.
 # -----------------------------------------------------------------------------
 
-MARCA = "Cutting Mix"
+MARCA = "Lunic Home"
 STORE_ID = ""            # id da loja no export do fornecedor (ex.: "0fp4vy-u8")
 
 MOEDA_VENDA = "USD"      # moeda em que o cliente paga

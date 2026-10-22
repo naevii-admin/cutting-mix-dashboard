@@ -1,6 +1,6 @@
-# Cutting Mix · Painel de P&L e Caixa
+# Lunic Home · Painel de P&L e Caixa
 
-Dashboard financeiro da **Cutting Mix Drink** (cuttingmixdrink.com) — suplemento, mercado
+Dashboard financeiro da **Lunic Home** (cuttingmixdrink.com) — suplemento, mercado
 Itália/Europa. Estático (HTML + Chart.js via CDN), sem build. Deploy no Vercel a partir do GitHub.
 
 > **Moeda — o inverso da Naevii.** A marca **vende em USD** e **recebe payout em EUR**

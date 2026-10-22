@@ -2,7 +2,7 @@
   "name": "cutting-mix-dashboard",
   "version": "1.0.0",
   "private": true,
-  "description": "Dashboard de P&L e caixa da Cutting Mix Drink (vende USD, recebe payout EUR).",
+  "description": "Dashboard de P&L e caixa da Lunic Home (vende USD, recebe payout EUR).",
   "scripts": {
     "publicar": "node scripts/publicar.mjs",
     "gerar": "python3 scripts/gerar_pnl.py && python3 scripts/gerar_caixa.py"
