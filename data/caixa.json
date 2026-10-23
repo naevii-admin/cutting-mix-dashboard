@@ -1,28 +1,117 @@
 {
+  "loja": "lunic",
+  "atualizado_em": "2026-10-23T10:55:00-03:00",
   "meta": {
     "marca": "Lunic Home",
-    "conta": "",
-    "periodo": "",
-    "moeda_base": "EUR",
-    "cambio_eur_usd": 0,
-    "cambio_usd_brl": 5.1,
-    "observacoes": []
+    "moeda": "USD",
+    "notas": [
+      "A Naevii banca Meta e Google da Lunic ate a Lunic ter caixa proprio: todo gasto bancado entra como divida da Lunic com a Naevii.",
+      "Payout da Shopify cai em USD no Mercury Checking 9981, D+7 dias uteis. Taxas: 3,9%+$0,30 (cartao internacional) ou 2,9%+$0,30 (EUA), mais 1,5% de conversao quando a cliente paga em EUR.",
+      "Datas depois de 23/10 sao projecao (so payouts ja agendados, sem gasto novo).",
+      "Meta entra pela data do GASTO; $597,19 ja cobrados no Visa 6101 e $30,95 ainda a cobrar."
+    ]
   },
   "saldo_atual": {
-    "eur": 0,
-    "usd": 0,
-    "brl": 0
+    "usd": 137.37,
+    "brl": 702.89,
+    "piso_usd": 300,
+    "livre_usd": 0
+  },
+  "divida_naevii": {
+    "total_usd": 688.14,
+    "meta_cobrado_usd": 597.19,
+    "meta_a_cobrar_usd": 30.95,
+    "google_usd": 60.0,
+    "devolvido_usd": 0,
+    "jx_bancado_usd": 0,
+    "obs": "JX ainda nao paga, aguardando a fornecedora splitar os pedidos"
+  },
+  "posicao": {
+    "hoje_usd": -550.77,
+    "com_payouts_usd": 372.79,
+    "com_payouts_e_jx_usd": -333.23,
+    "obs": "Ultima linha considera a fila da JX inteira a preco de hoje, antes do split (#1012 e #1013 estimados em $80,48)"
   },
   "resumo": {
-    "entrou_eur": 0,
-    "saiu_ads_eur": 0,
-    "saiu_pedidos_eur": 0,
-    "saiu_brl_eur": 0,
-    "saiu_outras_eur": 0,
-    "liquido_eur": 0,
-    "dias": 0
+    "entrou_usd": 137.37,
+    "saiu_ads_usd": 688.14,
+    "saiu_pedidos_usd": 0,
+    "saiu_outras_usd": 0,
+    "saldo_periodo_usd": -550.77,
+    "a_receber_usd": 923.56
   },
-  "fornecedor": null,
-  "saldo_diario": [],
-  "movimentacoes": []
+  "saldo_diario": [
+    { "data": "2026-10-09", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 60.38, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 60.38, "posicao_liquida_usd": -60.38 },
+    { "data": "2026-10-10", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 11.9, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 72.28, "posicao_liquida_usd": -72.28 },
+    { "data": "2026-10-11", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 21.81, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 94.09, "posicao_liquida_usd": -94.09 },
+    { "data": "2026-10-12", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 16.41, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 110.5, "posicao_liquida_usd": -110.5 },
+    { "data": "2026-10-13", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 110.5, "posicao_liquida_usd": -110.5 },
+    { "data": "2026-10-14", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 75.95, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 186.45, "posicao_liquida_usd": -186.45 },
+    { "data": "2026-10-15", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 86.19, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 272.64, "posicao_liquida_usd": -272.64 },
+    { "data": "2026-10-16", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 34.07, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 306.71, "posicao_liquida_usd": -306.71 },
+    { "data": "2026-10-17", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 39.52, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 346.23, "posicao_liquida_usd": -346.23 },
+    { "data": "2026-10-18", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 45.93, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 392.16, "posicao_liquida_usd": -392.16 },
+    { "data": "2026-10-19", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 40.02, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 432.18, "posicao_liquida_usd": -432.18 },
+    { "data": "2026-10-20", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 35.34, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 467.52, "posicao_liquida_usd": -467.52 },
+    { "data": "2026-10-21", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 61.69, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 529.21, "posicao_liquida_usd": -529.21 },
+    { "data": "2026-10-22", "projetado": false, "entrada_usd": 0, "saida_ads_usd": 84.86, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 0, "divida_naevii_usd": 614.07, "posicao_liquida_usd": -614.07 },
+    { "data": "2026-10-23", "projetado": false, "entrada_usd": 137.37, "saida_ads_usd": 74.07, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 137.37, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -550.77 },
+    { "data": "2026-10-24", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 137.37, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -550.77 },
+    { "data": "2026-10-25", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 137.37, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -550.77 },
+    { "data": "2026-10-26", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 137.37, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -550.77 },
+    { "data": "2026-10-27", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 137.37, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -550.77 },
+    { "data": "2026-10-28", "projetado": true, "entrada_usd": 107.87, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 245.24, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -442.9 },
+    { "data": "2026-10-29", "projetado": true, "entrada_usd": 52.74, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 297.98, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -390.16 },
+    { "data": "2026-10-30", "projetado": true, "entrada_usd": 382.15, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 680.13, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -8.01 },
+    { "data": "2026-10-31", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 680.13, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -8.01 },
+    { "data": "2026-11-01", "projetado": true, "entrada_usd": 0, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 680.13, "divida_naevii_usd": 688.14, "posicao_liquida_usd": -8.01 },
+    { "data": "2026-11-02", "projetado": true, "entrada_usd": 254.76, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 934.89, "divida_naevii_usd": 688.14, "posicao_liquida_usd": 246.75 },
+    { "data": "2026-11-03", "projetado": true, "entrada_usd": 126.04, "saida_ads_usd": 0, "saida_pedidos_usd": 0, "saida_outras_usd": 0, "saldo_fim_usd": 1060.93, "divida_naevii_usd": 688.14, "posicao_liquida_usd": 372.79 }
+  ],
+  "movimentacoes": [
+    { "data": "2026-10-09", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Google Ads, testes (data a confirmar)", "valor_usd": -60.0, "bancado_pela_naevii": true },
+    { "data": "2026-10-09", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -0.38, "bancado_pela_naevii": true },
+    { "data": "2026-10-10", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -11.9, "bancado_pela_naevii": true },
+    { "data": "2026-10-11", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -21.81, "bancado_pela_naevii": true },
+    { "data": "2026-10-12", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -16.41, "bancado_pela_naevii": true },
+    { "data": "2026-10-14", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -75.95, "bancado_pela_naevii": true },
+    { "data": "2026-10-15", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -86.19, "bancado_pela_naevii": true },
+    { "data": "2026-10-16", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -34.07, "bancado_pela_naevii": true },
+    { "data": "2026-10-17", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -39.52, "bancado_pela_naevii": true },
+    { "data": "2026-10-18", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -45.93, "bancado_pela_naevii": true },
+    { "data": "2026-10-19", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -40.02, "bancado_pela_naevii": true },
+    { "data": "2026-10-20", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -35.34, "bancado_pela_naevii": true },
+    { "data": "2026-10-21", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -61.69, "bancado_pela_naevii": true },
+    { "data": "2026-10-22", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -84.86, "bancado_pela_naevii": true },
+    { "data": "2026-10-23", "banco": "Naevii (Visa 6101)", "tipo": "ads", "descricao": "Meta Ads", "valor_usd": -74.07, "bancado_pela_naevii": true },
+    { "data": "2026-10-23", "banco": "Mercury Checking 9981", "tipo": "entrada", "descricao": "Payout Shopify #146250268850 (#1001)", "valor_usd": 137.37, "bancado_pela_naevii": false }
+  ],
+  "a_receber": [
+    { "data": "2026-10-28", "pedidos": "#1002", "valor_usd": 107.87, "status": "pending" },
+    { "data": "2026-10-29", "pedidos": "#1003", "valor_usd": 52.74, "status": "pending" },
+    { "data": "2026-10-30", "pedidos": "#1004 a #1008", "valor_usd": 382.15, "status": "pending" },
+    { "data": "2026-11-02", "pedidos": "#1009 a #1011", "valor_usd": 254.76, "status": "pending" },
+    { "data": "2026-11-03", "pedidos": "#1012 e #1013", "valor_usd": 126.04, "status": "pending" }
+  ],
+  "fila_jx": [
+    { "pedido": "#1001", "valor_usd": 55.69, "status": "aguardando_split" },
+    { "pedido": "#1002", "valor_usd": 64.15, "status": "aguardando_split" },
+    { "pedido": "#1003", "valor_usd": 45.52, "status": "aguardando_split" },
+    { "pedido": "#1004", "valor_usd": 38.41, "status": "aguardando_split" },
+    { "pedido": "#1005", "valor_usd": 50.5, "status": "aguardando_split" },
+    { "pedido": "#1006", "valor_usd": 59.71, "status": "aguardando_split" },
+    { "pedido": "#1007", "valor_usd": 41.49, "status": "aguardando_split" },
+    { "pedido": "#1008", "valor_usd": 81.59, "status": "aguardando_split" },
+    { "pedido": "#1009", "valor_usd": 38.05, "status": "aguardando_split" },
+    { "pedido": "#1010", "valor_usd": 99.54, "status": "aguardando_split" },
+    { "pedido": "#1011", "valor_usd": 50.89, "status": "aguardando_split" },
+    { "pedido": "#1012", "valor_usd": null, "status": "sem_cotacao" },
+    { "pedido": "#1013", "valor_usd": null, "status": "sem_cotacao" }
+  ],
+  "alertas": [
+    { "nivel": "alto", "texto": "Fila da JX nao paga: $625,54 (#1001 a #1011) + #1012 e #1013 sem cotacao, aguardando split. Mercury tem $137,37; so cobre a fila sozinho a partir de 30/10 ($679,76 acumulado)." },
+    { "nivel": "medio", "texto": "Payout cai em USD com 1,5% de conversao. Payout em EUR (Revolut) elimina essa taxa." },
+    { "nivel": "medio", "texto": "Proximo payout so em 28/10 ($107,87); o grosso cai em 30/10 ($382,15)." },
+    { "nivel": "alto", "texto": "#1001 e de 14/10 e ainda nao foi enviado: 9 dias parados. Risco de ticket e chargeback." }
+  ]
 }

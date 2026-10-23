@@ -1,82 +1,63 @@
-// Painel Caixa — fluxo bancário do Revolut (EUR), conta única desde 12/09/2026.
-// É o extrato real por movimentação, NÃO o P&L. Ads aparecem na data da COBRANÇA
-// (câmbio EUR→USD que abastece a conta de anúncios), não do gasto — por isso o
-// caixa nunca bate dia a dia com o P&L. Isso é esperado, não é erro.
+// Painel Caixa — Lunic Home. Conta em USD (Mercury Checking). A Naevii banca os
+// ads (Meta+Google) até a Lunic ter caixa próprio, então todo gasto vira DÍVIDA
+// da Lunic com a Naevii. É fluxo de caixa real (banco), NÃO reconciliar com o P&L.
+// Dias após a data de atualização são PROJEÇÃO (só payouts já agendados).
 
-import { useState } from 'react'
 import {
   ResponsiveContainer,
   ComposedChart,
-  PieChart,
-  Pie,
-  Cell,
-  Bar,
   Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
+  ReferenceLine,
 } from 'recharts'
+import { useState } from 'react'
 import Kpi from '../components/Kpi'
 import ChartCard from '../components/ChartCard'
 import {
-  caixaMeta,
+  caixa,
   caixaSaldo,
+  caixaDivida,
+  caixaPosicao,
   caixaResumo,
   caixaDiario,
   caixaMov,
-  caixaFornecedor,
-  eur,
+  caixaReceber,
+  caixaFilaJx,
+  caixaAlertas,
   usd,
-  pct,
-  brlRaw,
 } from '../data'
 import { C } from '../chartColors'
 
-// Cor por tipo de movimentação (significado, não estética).
-const COR = {
-  entrada: C.sage,
-  ads: C.clay,
-  pedidos: C.inkBlue,
-  retirada_brl: C.gold,
-  outras: C.line,
-}
-const NOME = {
-  entrada: 'entrada',
-  ads: 'ads',
-  pedidos: 'pedidos',
-  retirada_brl: 'retirada BRL',
-  outras: 'outras',
-}
+// "2026-10-24" -> "24/10"
+const diaCurto = (s) => `${s.slice(8, 10)}/${s.slice(5, 7)}`
+
+const COR = { entrada: C.sage, ads: C.clay, pedidos: C.inkBlue }
+const NOME = { entrada: 'entrada', ads: 'ads', pedidos: 'pedidos' }
 
 const FILTROS = [
   { f: 'todos', label: 'todas' },
   { f: 'entrada', label: 'entradas' },
   { f: 'ads', label: 'ads' },
-  { f: 'pedidos', label: 'pedidos' },
-  { f: 'retirada_brl', label: 'retirada BRL' },
 ]
 
-// "2026-09-24" -> "24/09"
-const diaCurto = (s) => `${s.slice(8, 10)}/${s.slice(5, 7)}`
-
-function EvolucaoTooltip({ active, payload }) {
+function EvolucaoTooltip({ active, payload, label }) {
   if (!active || !payload || !payload.length) return null
   const d = payload[0].payload
   const linhas = [
-    ['saldo no fim', eur(d.saldo_fim_eur), C.plum],
-    ['entrada', eur(d.entrada_eur), C.sage],
-    ['ads', eur(d.saida_ads_eur), C.clay],
-    ['pedidos', eur(d.saida_pedidos_eur), C.inkBlue],
-    ['retirada BRL', eur(d.saida_brl_eur), C.gold],
+    ['posição líquida', usd(d.posicao_liquida_usd), d.posicao_liquida_usd >= 0 ? C.sage : C.clay],
+    ['saldo em conta', usd(d.saldo_fim_usd), C.inkBlue],
+    ['dívida c/ Naevii', usd(d.divida_naevii_usd), C.clay],
   ]
   return (
     <div className="tt">
-      <div className="tt-d">{diaCurto(d.data)}</div>
-      {linhas.map(([label, valor, cor]) => (
-        <div className="tt-row" key={label}>
-          <span>{label}</span>
-          <span style={{ color: cor }}>{valor}</span>
+      <div className="tt-d">{diaCurto(label)}{d.projetado ? ' · projeção' : ''}</div>
+      {linhas.map(([l, v, cor]) => (
+        <div className="tt-row" key={l}>
+          <span>{l}</span>
+          <span style={{ color: cor }}>{v}</span>
         </div>
       ))}
     </div>
@@ -86,26 +67,20 @@ function EvolucaoTooltip({ active, payload }) {
 export default function CashPanel() {
   const [filtro, setFiltro] = useState('todos')
 
-  const dias = caixaDiario.filter((x) => x.saldo_fim_eur != null)
-  const positivo = caixaResumo.liquido_eur >= 0
+  const hoje = caixa.data
+  const posHoje = caixaPosicao.hoje_usd
+  const posOk = posHoje >= 0
 
-  // Composição das saídas (rosca).
-  const saidas = [
-    { key: 'ads', label: 'ads', valor: caixaResumo.saiu_ads_eur, cor: C.clay },
-    { key: 'pedidos', label: 'pedidos', valor: caixaResumo.saiu_pedidos_eur, cor: C.inkBlue },
-    { key: 'retirada_brl', label: 'retirada BRL', valor: caixaResumo.saiu_brl_eur, cor: C.gold },
-    { key: 'outras', label: 'outras', valor: caixaResumo.saiu_outras_eur, cor: C.line },
-  ].filter((s) => s.valor > 0)
-  const totalSaiu = saidas.reduce((a, s) => a + s.valor, 0)
+  const filaCotada = caixaFilaJx.filter((p) => p.valor_usd != null)
+  const filaTotal = filaCotada.reduce((a, p) => a + p.valor_usd, 0)
+  const filaSemCotacao = caixaFilaJx.length - filaCotada.length
 
-  const F = caixaFornecedor
-  const porPedido = F && F.a_pagar_pedidos ? F.a_pagar_usd / F.a_pagar_pedidos : null
-
-  // Movimentações da mais recente pra mais antiga.
   const movs = caixaMov
     .slice()
     .reverse()
     .filter((m) => filtro === 'todos' || m.tipo === filtro)
+
+  const nivelCor = { alto: C.clay, medio: C.gold, baixo: C.sage }
 
   return (
     <div>
@@ -114,181 +89,118 @@ export default function CashPanel() {
         <Kpi
           label="Saldo em conta"
           accent={C.inkBlue}
-          value={eur(caixaSaldo.eur)}
-          sub={`${usd(caixaSaldo.usd)} · ${brlRaw(caixaSaldo.brl)}`}
+          value={usd(caixaSaldo.usd)}
+          sub={`Mercury USD · piso ${usd(caixaSaldo.piso_usd)}`}
         />
         <Kpi
-          label="Entrou no período"
-          accent={C.sage}
-          value={eur(caixaResumo.entrou_eur)}
-          sub={`${caixaResumo.dias} dias · Stripe (payout Shopify)`}
-        />
-        <Kpi
-          label="Saiu — ads"
+          label="Dívida com a Naevii"
           accent={C.clay}
-          value={eur(caixaResumo.saiu_ads_eur)}
-          sub="câmbio EUR→USD (abastece anúncios)"
+          value={<span className="neg">{usd(caixaDivida.total_usd)}</span>}
+          sub="ads bancados (Meta + Google)"
         />
         <Kpi
-          label="Saiu — fornecedor"
-          accent={C.inkBlue}
-          value={eur(caixaResumo.saiu_pedidos_eur)}
-          sub="SWIFT p/ GrandReach (JX)"
+          label="A receber (payouts)"
+          accent={C.sage}
+          value={usd(caixaResumo.a_receber_usd)}
+          sub="payouts Shopify pendentes"
         />
         <Kpi
-          label="Líquido do período"
-          accent={positivo ? C.sage : C.clay}
-          value={<span className={positivo ? 'pos' : 'neg'}>{eur(caixaResumo.liquido_eur)}</span>}
-          sub={`retirada BRL ${eur(caixaResumo.saiu_brl_eur)}`}
-          tag={positivo ? 'entrou mais' : 'saiu mais'}
-          tagKind={positivo ? 'good' : 'bad'}
+          label="Fila do fornecedor (JX)"
+          accent={C.gold}
+          value={<span className="neg">{usd(filaTotal)}</span>}
+          sub={`${filaCotada.length} pedidos${filaSemCotacao ? ` · +${filaSemCotacao} sem cotação` : ''}`}
+        />
+        <Kpi
+          label="Posição líquida hoje"
+          accent={posOk ? C.sage : C.clay}
+          value={<span className={posOk ? 'pos' : 'neg'}>{usd(posHoje)}</span>}
+          sub={`com payouts: ${usd(caixaPosicao.com_payouts_usd)}`}
+          tag={posOk ? 'no azul' : 'no vermelho'}
+          tagKind={posOk ? 'good' : 'bad'}
         />
       </div>
 
-      {/* -------- Composição das saídas (rosca) -------- */}
-      <div className="section">
-        <ChartCard title="Pra onde foi o dinheiro que saiu" note="Total das saídas do período">
-          <div className="pie-wrap">
-            <div className="pie-graph">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={saidas}
-                    dataKey="valor"
-                    nameKey="label"
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="58%"
-                    outerRadius="92%"
-                    paddingAngle={2}
-                    stroke="none"
-                  >
-                    {saidas.map((s) => (
-                      <Cell key={s.key} fill={s.cor} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    content={({ active, payload }) =>
-                      active && payload && payload.length ? (
-                        <div className="tt">
-                          <div className="tt-row">
-                            <span>{payload[0].payload.label}</span>
-                            <span style={{ color: payload[0].payload.cor }}>
-                              {eur(payload[0].payload.valor)}
-                            </span>
-                          </div>
-                        </div>
-                      ) : null
-                    }
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="pie-center">
-                <span className="pie-center-label">saiu</span>
-                <span className="pie-center-value">{eur(totalSaiu)}</span>
-              </div>
-            </div>
-            <ul className="pie-legend">
-              {saidas.map((s) => (
-                <li className="pie-legend-item" key={s.key}>
-                  <span className="pl-dot" style={{ background: s.cor }} />
-                  <span className="pl-label">{s.label}</span>
-                  <span className="pl-pct">{pct((s.valor / totalSaiu) * 100)}</span>
-                  <span className="pl-val">{eur(s.valor)}</span>
-                </li>
-              ))}
-              <li className="pie-legend-item" style={{ borderTop: '1px solid var(--line)', paddingTop: 8, marginTop: 2 }}>
-                <span className="pl-dot" style={{ background: C.sage }} />
-                <span className="pl-label">entrou</span>
-                <span className="pl-pct">{pct((totalSaiu / caixaResumo.entrou_eur) * 100)} gasto</span>
-                <span className="pl-val">{eur(caixaResumo.entrou_eur)}</span>
-              </li>
-            </ul>
-          </div>
-        </ChartCard>
-      </div>
-
-      {/* -------- Evolução do saldo + movimento -------- */}
+      {/* -------- Evolução -------- */}
       <div className="section">
         <ChartCard
-          title="Evolução do saldo e movimento de cada dia"
-          note="Linha = saldo no fim do dia (€). Barras = entrada (verde) vs saídas empilhadas."
+          title="Saldo, dívida e posição líquida"
+          note="Linha roxa = posição líquida (conta − dívida). A partir de 24/10 é projeção (só payouts já agendados)."
           height={320}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={dias} margin={{ top: 8, right: 8, left: 0, bottom: 4 }}>
+            <ComposedChart data={caixaDiario} margin={{ top: 8, right: 10, left: 4, bottom: 4 }}>
               <CartesianGrid stroke={C.line} strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="data" tickFormatter={diaCurto} tick={{ fontSize: 11 }} stroke={C.line} />
-              <YAxis yAxisId="mov" tick={{ fontSize: 11 }} stroke={C.line} width={44} tickFormatter={(v) => `€${Math.round(v)}`} />
-              <YAxis yAxisId="saldo" orientation="right" tick={{ fontSize: 11 }} stroke={C.line} width={44} tickFormatter={(v) => `€${Math.round(v)}`} />
-              <Tooltip content={<EvolucaoTooltip />} cursor={{ fill: 'rgba(0,0,0,.04)' }} />
-              <Bar yAxisId="mov" dataKey="entrada_eur" stackId="in" fill={C.sage} radius={[2, 2, 0, 0]} maxBarSize={26} />
-              <Bar yAxisId="mov" dataKey="saida_ads_eur" stackId="out" fill={C.clay} maxBarSize={26} />
-              <Bar yAxisId="mov" dataKey="saida_pedidos_eur" stackId="out" fill={C.inkBlue} maxBarSize={26} />
-              <Bar yAxisId="mov" dataKey="saida_brl_eur" stackId="out" fill={C.gold} radius={[2, 2, 0, 0]} maxBarSize={26} />
-              <Line yAxisId="saldo" type="monotone" dataKey="saldo_fim_eur" stroke={C.plum} strokeWidth={2.5} dot={{ r: 3, fill: C.plum }} />
+              <YAxis tick={{ fontSize: 11 }} stroke={C.line} width={52} tickFormatter={(v) => `$${Math.round(v)}`} />
+              <Tooltip content={<EvolucaoTooltip />} cursor={{ stroke: C.line }} />
+              <ReferenceLine y={0} stroke={C.ink} strokeDasharray="2 2" />
+              {hoje && (
+                <ReferenceLine
+                  x={hoje}
+                  stroke={C.inkBlue}
+                  strokeDasharray="4 4"
+                  label={{ value: 'hoje', position: 'insideTopLeft', fill: C.inkBlue, fontSize: 11 }}
+                />
+              )}
+              <Line type="monotone" dataKey="divida_naevii_usd" stroke={C.clay} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="saldo_fim_usd" stroke={C.inkBlue} strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="posicao_liquida_usd" stroke={C.plum} strokeWidth={2.8} dot={{ r: 2.5, fill: C.plum }} />
             </ComposedChart>
           </ResponsiveContainer>
           <ul className="cx-legenda">
-            <li><i style={{ background: C.plum }} />saldo</li>
-            <li><i style={{ background: C.sage }} />entrada</li>
-            <li><i style={{ background: C.clay }} />ads</li>
-            <li><i style={{ background: C.inkBlue }} />pedidos</li>
-            <li><i style={{ background: C.gold }} />retirada BRL</li>
+            <li><i style={{ background: C.plum }} />posição líquida</li>
+            <li><i style={{ background: C.inkBlue }} />saldo em conta</li>
+            <li><i style={{ background: C.clay }} />dívida c/ Naevii</li>
           </ul>
         </ChartCard>
       </div>
 
-      {/* -------- Fornecedor (JX / GrandReach) -------- */}
-      {F && (
-        <div className="section">
-          <div className="section-head">
-            <h2>Fornecedor · JX / GrandReach</h2>
-            <span className="hint">
-              {F.pedidos_total} pedidos · {usd(F.total_cobrado_usd)} no total · inclui UGC (fora do P&L)
-            </span>
+      {/* -------- A receber + Fila JX -------- */}
+      <div className="section grid cols-2">
+        <div className="card card-pad">
+          <div className="stack-label">
+            <span><strong>A receber · payouts Shopify</strong></span>
+            <span className="pt">{usd(caixaResumo.a_receber_usd)} no total</span>
           </div>
-
-          <div className="kpi-row">
-            <Kpi
-              label="A pagar ao fornecedor"
-              accent={C.clay}
-              value={<span className="neg">{usd(F.a_pagar_usd)}</span>}
-              sub={
-                porPedido != null
-                  ? `${F.a_pagar_pedidos} pedidos · ${usd(porPedido)} por pedido`
-                  : 'informado pelo Simon (painel da JX)'
-              }
-            />
-            <Kpi
-              label="Crédito na conta"
-              accent={C.sage}
-              value={<span className="pos">{usd(Math.abs(F.saldo_conta_usd))}</span>}
-              sub="adiantado (abate o a pagar)"
-            />
-            <Kpi
-              label="Último pagamento"
-              accent={C.gold}
-              value={eur(F.ultimo_pagamento.valor_eur)}
-              sub={diaCurto(F.ultimo_pagamento.data)}
-            />
-          </div>
-
-          <div className="card card-pad">
-            <div className="stack-label">
-              <span><strong>Pagamentos (SWIFT)</strong></span>
-              <span className="pt">transferências pra GrandReach</span>
+          {caixaReceber.map((r, i) => (
+            <div className="pay" key={i}>
+              <span className="pd">{diaCurto(r.data)} · {r.pedidos}</span>
+              <span className="pv pos">{usd(r.valor_usd)}</span>
             </div>
-            {F.pagamentos.slice().reverse().map((p, i) => (
-              <div className="pay" key={i}>
-                <span className="pd">{diaCurto(p.data)}</span>
-                <span className="pv">{eur(p.valor_eur)} · {usd(p.valor_usd)}</span>
+          ))}
+          <div className="card-note" style={{ marginTop: 10 }}>
+            Payout cai em USD (Mercury), D+7 úteis. 1,5% de conversão quando a cliente paga em EUR.
+          </div>
+        </div>
+
+        <div className="card card-pad">
+          <div className="stack-label">
+            <span><strong>Fila do fornecedor · JX</strong></span>
+            <span className="pt">{usd(filaTotal)} cotado{filaSemCotacao ? ` · +${filaSemCotacao} sem cotação` : ''}</span>
+          </div>
+          {caixaFilaJx.map((p, i) => (
+            <div className="pay" key={i}>
+              <span className="pd">{p.pedido}</span>
+              <span className="pv">{p.valor_usd != null ? usd(p.valor_usd) : '—'}</span>
+            </div>
+          ))}
+          <div className="card-note" style={{ marginTop: 10 }}>
+            Aguardando a JX splitar os pedidos. Nada pago ainda.
+          </div>
+        </div>
+      </div>
+
+      {/* -------- Alertas -------- */}
+      {caixaAlertas.length > 0 && (
+        <div className="section">
+          <div className="section-head"><h2>Alertas</h2></div>
+          <div className="card card-pad">
+            {caixaAlertas.map((a, i) => (
+              <div className="pay" key={i} style={{ alignItems: 'flex-start', gap: 10 }}>
+                <span className="cx-tag" style={{ '--cor': nivelCor[a.nivel] || C.ink }}>{a.nivel}</span>
+                <span className="cx-desc" style={{ flex: 1 }}>{a.texto}</span>
               </div>
             ))}
-            <div className="card-note" style={{ marginTop: 10 }}>
-              O "a pagar" é informado pelo Simon no painel da JX (a planilha não traz status
-              de pagamento){F.a_pagar_atualizado_em ? ` · atualizado ${diaCurto(F.a_pagar_atualizado_em)}` : ''}.
-            </div>
           </div>
         </div>
       )}
@@ -297,7 +209,7 @@ export default function CashPanel() {
       <div className="section">
         <div className="section-head">
           <h2>Movimentações</h2>
-          <span className="hint">extrato do Revolut · {caixaMov.length} linhas</span>
+          <span className="hint">{caixaMov.length} linhas · ads bancados pela Naevii + payouts</span>
         </div>
 
         <div className="cx-filtros">
@@ -314,27 +226,21 @@ export default function CashPanel() {
               <tr>
                 <th>data</th>
                 <th>tipo</th>
+                <th>banco</th>
                 <th>descrição</th>
                 <th className="num">valor</th>
-                <th className="num">saldo após</th>
               </tr>
             </thead>
             <tbody>
               {movs.map((m, i) => (
                 <tr key={i}>
                   <td>{diaCurto(m.data)}</td>
-                  <td>
-                    <span className="cx-tag" style={{ '--cor': COR[m.tipo] }}>{NOME[m.tipo]}</span>
+                  <td><span className="cx-tag" style={{ '--cor': COR[m.tipo] || C.ink }}>{NOME[m.tipo] || m.tipo}</span></td>
+                  <td className="cx-desc">{m.banco}</td>
+                  <td className="cx-desc">{m.descricao}</td>
+                  <td className={`num ${m.valor_usd >= 0 ? 'pos' : 'neg'}`}>
+                    {m.valor_usd >= 0 ? '+' : ''}{usd(m.valor_usd)}
                   </td>
-                  <td className="cx-desc">
-                    {m.descricao}
-                    {m.usd_declarado ? ` · $${m.usd_declarado.toFixed(2)}` : ''}
-                  </td>
-                  <td className={`num ${m.valor_eur >= 0 ? 'pos' : 'neg'}`}>
-                    {m.valor_eur >= 0 ? '+' : ''}
-                    {eur(m.valor_eur)}
-                  </td>
-                  <td className="num">{m.saldo_apos_eur != null ? eur(m.saldo_apos_eur) : '—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -343,9 +249,8 @@ export default function CashPanel() {
       </div>
 
       <div className="card-note" style={{ marginTop: 4, opacity: 0.7 }}>
-        {caixaMeta.conta} · {caixaMeta.periodo} · {caixaResumo.dias} dias · câmbio medido
-        no extrato €1 = ${caixaMeta.cambio_eur_usd}. Fluxo de caixa (banco), não reconciliar
-        com o P&L.
+        Conta Mercury (USD) · atualizado {hoje ? diaCurto(hoje) : '—'} · a Naevii banca os ads até a
+        Lunic ter caixa próprio (vira dívida). Fluxo de caixa (banco), não reconciliar com o P&L.
       </div>
     </div>
   )

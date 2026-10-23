@@ -14,6 +14,7 @@ function cssVar(name, fallback) {
 }
 
 export const C = {
+  ink: cssVar('--ink', '#1b1a17'),
   sage: cssVar('--sage', '#5a8a4f'),
   sageDark: cssVar('--sage-dark', '#3f5a37'),
   clay: cssVar('--clay', '#c8492c'),

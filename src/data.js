@@ -14,29 +14,30 @@ export const CPA_REF = 31 // $ — CPA de referência
 // o da Naevii. Revisar quando o COGS mudar.
 export const BREAK_EVEN_ROAS = 3.3
 
-// ---------- Caixa (fluxo bancário — Revolut EUR) ----------
-// O caixa agora é o extrato do Revolut: conta única desde 12/09/2026, quando o
-// Mercury zerou e saiu da operação. É fluxo de caixa REAL por movimentação
-// bancária — NÃO reconciliar com o P&L (regimes diferentes; ver README).
+// ---------- Caixa (fluxo bancário — Mercury USD) ----------
+// A Lunic recebe payout da Shopify em USD (Mercury) e a Naevii banca os ads até
+// a Lunic ter caixa próprio — tudo que a Naevii paga vira DÍVIDA da Lunic. É
+// fluxo de caixa REAL (banco), NÃO reconciliar com o P&L (regimes diferentes).
 const caixaDiarioRaw = caixaRaw.saldo_diario || []
 const dataCaixa =
   caixaRaw.data ||
+  caixaRaw.atualizado_em?.slice(0, 10) ||
   (caixaDiarioRaw.length ? caixaDiarioRaw[caixaDiarioRaw.length - 1].data : null) ||
-  caixaRaw.meta?.periodo?.split(' a ')[1] ||
-  caixaRaw.meta?.gerado_em ||
   null
 export const caixa = { ...caixaRaw, data: dataCaixa }
 
 export const caixaMeta = caixaRaw.meta || {}
 export const caixaSaldo = caixaRaw.saldo_atual || {}
+export const caixaDivida = caixaRaw.divida_naevii || {}
+export const caixaPosicao = caixaRaw.posicao || {}
 export const caixaResumo = caixaRaw.resumo || {}
 export const caixaDiario = caixaDiarioRaw
 export const caixaMov = caixaRaw.movimentacoes || []
-// Fornecedor (JX/GrandReach) — pode vir null se a planilha da JX não foi passada.
-// saldo_conta/a_pagar negativos = crédito adiantado (está em dia).
-export const caixaFornecedor = caixaRaw.fornecedor || null
+export const caixaReceber = caixaRaw.a_receber || []
+export const caixaFilaJx = caixaRaw.fila_jx || []
+export const caixaAlertas = caixaRaw.alertas || []
 
-// Taxa BRL usada em toda a formatação de R$ (vem do estado do caixa).
+// Taxa BRL só pra formatar R$ no P&L (conversão aproximada; a Lunic opera em USD).
 export const BRL = caixaRaw.brl || caixaRaw.meta?.cambio_usd_brl || 5.1
 
 // ---------- Série de P&L, agrupada por mês ----------

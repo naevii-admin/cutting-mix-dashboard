@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PnlPanel from './panels/PnlPanel'
 import CashPanel from './panels/CashPanel'
-import { caixa, totais, BRL, usd } from './data'
+import { caixa, totais, usd } from './data'
 
 const TABS = [
   { id: 'pnl', label: 'Resultado (P&L)' },
@@ -37,7 +37,7 @@ export default function App() {
             Caixa em <span className="num">{dataBR(caixa.data)}</span>
           </div>
           <div>
-            Câmbio <span className="num">R$ {BRL.toFixed(2)}</span> / US$
+            Moeda base <span className="num">USD</span>
           </div>
         </div>
       </header>
