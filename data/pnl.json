@@ -1,1 +1,17 @@
-[]
+[
+  {"d":"10-09","ped":0,"rec":0,"cogs":0,"ads":0.38,"lucro":-0.38,"margem":0,"cpa":0,"org":false},
+  {"d":"10-10","ped":0,"rec":0,"cogs":0,"ads":11.9,"lucro":-11.9,"margem":0,"cpa":0,"org":false},
+  {"d":"10-11","ped":0,"rec":0,"cogs":0,"ads":21.81,"lucro":-21.81,"margem":0,"cpa":0,"org":false},
+  {"d":"10-12","ped":0,"rec":0,"cogs":0,"ads":16.41,"lucro":-16.41,"margem":0,"cpa":0,"org":false},
+  {"d":"10-13","ped":0,"rec":0,"cogs":0,"ads":0,"lucro":0,"margem":0,"cpa":0,"org":false},
+  {"d":"10-14","ped":1,"rec":143.96,"cogs":55.69,"ads":75.95,"lucro":12.32,"margem":8.6,"cpa":75.95,"org":false},
+  {"d":"10-15","ped":0,"rec":0,"cogs":0,"ads":86.19,"lucro":-86.19,"margem":0,"cpa":0,"org":false},
+  {"d":"10-16","ped":0,"rec":0,"cogs":0,"ads":34.07,"lucro":-34.07,"margem":0,"cpa":0,"org":false},
+  {"d":"10-17","ped":0,"rec":0,"cogs":0,"ads":39.52,"lucro":-39.52,"margem":0,"cpa":0,"org":false},
+  {"d":"10-18","ped":0,"rec":0,"cogs":0,"ads":45.93,"lucro":-45.93,"margem":0,"cpa":0,"org":false},
+  {"d":"10-19","ped":1,"rec":113.28,"cogs":64.15,"ads":40.02,"lucro":9.11,"margem":8.0,"cpa":40.02,"org":false},
+  {"d":"10-20","ped":3,"rec":182.96,"cogs":134.43,"ads":35.34,"lucro":13.19,"margem":7.2,"cpa":11.78,"org":false},
+  {"d":"10-21","ped":3,"rec":268.86,"cogs":182.79,"ads":61.69,"lucro":24.38,"margem":9.1,"cpa":20.56,"org":false},
+  {"d":"10-22","ped":3,"rec":268.44,"cogs":188.48,"ads":84.86,"lucro":-4.9,"margem":-1.8,"cpa":28.29,"org":false},
+  {"d":"10-23","ped":2,"rec":131.5,"cogs":80.48,"ads":74.07,"lucro":-23.05,"margem":-17.5,"cpa":37.03,"org":false}
+]

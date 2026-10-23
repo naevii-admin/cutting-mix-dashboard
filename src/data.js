@@ -9,9 +9,10 @@ import caixaRaw from '../data/caixa.json'
 // ---------- Referências de negócio ----------
 export const META_MARGEM = 18 // % — meta de margem
 export const CPA_REF = 31 // $ — CPA de referência
-// ROAS de break-even: abaixo disso o dia perde dinheiro. Vem do export de
-// análise (COGS ~40% + taxa Shopify 5,95%). Revisar quando o COGS mudar.
-export const BREAK_EVEN_ROAS = 1.66
+// ROAS de break-even: abaixo disso o dia perde dinheiro. Na Lunic o COGS roda
+// alto (~64% da receita em out/26, bundles), então o break-even é bem maior que
+// o da Naevii. Revisar quando o COGS mudar.
+export const BREAK_EVEN_ROAS = 3.3
 
 // ---------- Caixa (fluxo bancário — Revolut EUR) ----------
 // O caixa agora é o extrato do Revolut: conta única desde 12/09/2026, quando o
@@ -57,7 +58,7 @@ export function nomeMes(m) {
 }
 
 // Break-even do ROAS por mês (vem do export; muda com o COGS do mês).
-const BE_MES = { '07': 1.66, '08': 1.63, '09': 1.65 }
+const BE_MES = { '10': 3.3 }
 export function breakEvenMes(m) {
   return BE_MES[m] ?? BREAK_EVEN_ROAS
 }
