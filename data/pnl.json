@@ -10,8 +10,15 @@
   {"d":"10-17","ped":0,"rec":0,"cogs":0,"ads":39.52,"lucro":-39.52,"margem":0,"cpa":0,"org":false},
   {"d":"10-18","ped":0,"rec":0,"cogs":0,"ads":45.93,"lucro":-45.93,"margem":0,"cpa":0,"org":false},
   {"d":"10-19","ped":1,"rec":107.87,"cogs":64.15,"ads":40.02,"lucro":3.7,"margem":3.4,"cpa":40.02,"org":false},
-  {"d":"10-20","ped":3,"rec":177.23,"cogs":134.43,"ads":35.34,"lucro":7.46,"margem":4.2,"cpa":11.78,"org":false},
-  {"d":"10-21","ped":3,"rec":257.66,"cogs":182.79,"ads":61.69,"lucro":13.18,"margem":5.1,"cpa":20.56,"org":false},
-  {"d":"10-22","ped":3,"rec":254.76,"cogs":188.48,"ads":84.86,"lucro":-18.58,"margem":-7.3,"cpa":28.29,"org":false},
-  {"d":"10-23","ped":2,"rec":126.04,"cogs":80.48,"ads":74.07,"lucro":-28.51,"margem":-22.6,"cpa":37.03,"org":false}
+  {"d":"10-20","ped":3,"rec":177.23,"cogs":135.04,"ads":35.34,"lucro":6.85,"margem":3.9,"cpa":11.78,"org":false},
+  {"d":"10-21","ped":3,"rec":257.66,"cogs":169.78,"ads":61.69,"lucro":26.19,"margem":10.2,"cpa":20.56,"org":false},
+  {"d":"10-22","ped":3,"rec":254.76,"cogs":178.22,"ads":84.86,"lucro":-8.32,"margem":-3.3,"cpa":28.29,"org":false},
+  {"d":"10-23","ped":2,"rec":126.04,"cogs":54.41,"ads":114.21,"lucro":-42.58,"margem":-33.8,"cpa":57.1,"org":false},
+  {"d":"10-24","ped":1,"rec":80.2,"cogs":40.34,"ads":75.64,"lucro":-35.78,"margem":-44.6,"cpa":75.64,"org":false},
+  {"d":"10-25","ped":1,"rec":84.43,"cogs":45.57,"ads":53.97,"lucro":-15.11,"margem":-17.9,"cpa":53.97,"org":false},
+  {"d":"10-26","ped":3,"rec":157.86,"cogs":100.44,"ads":40.59,"lucro":16.83,"margem":10.7,"cpa":13.53,"org":false},
+  {"d":"10-27","ped":0,"rec":0,"cogs":0,"ads":0,"lucro":0,"margem":0,"cpa":0,"org":false},
+  {"d":"10-28","ped":2,"rec":183.89,"cogs":67.3,"ads":58.88,"lucro":57.71,"margem":31.4,"cpa":29.44,"org":false},
+  {"d":"10-29","ped":1,"rec":73.83,"cogs":49.03,"ads":82.57,"lucro":-57.77,"margem":-78.2,"cpa":82.57,"org":false},
+  {"d":"10-30","ped":2,"rec":137.05,"cogs":76.53,"ads":39.0,"lucro":21.52,"margem":15.7,"cpa":19.5,"org":false}
 ]
