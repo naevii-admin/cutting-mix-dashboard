@@ -20,5 +20,14 @@
   {"d":"10-27","ped":0,"rec":0,"cogs":0,"ads":0,"lucro":0,"margem":0,"cpa":0,"org":false},
   {"d":"10-28","ped":2,"rec":183.89,"cogs":67.3,"ads":58.88,"lucro":57.71,"margem":31.4,"cpa":29.44,"org":false},
   {"d":"10-29","ped":1,"rec":73.83,"cogs":49.03,"ads":82.57,"lucro":-57.77,"margem":-78.2,"cpa":82.57,"org":false},
-  {"d":"10-30","ped":2,"rec":137.05,"cogs":76.53,"ads":39.0,"lucro":21.52,"margem":15.7,"cpa":19.5,"org":false}
+  {"d":"10-30","ped":2,"rec":137.05,"cogs":76.53,"ads":39.0,"lucro":21.52,"margem":15.7,"cpa":19.5,"org":false},
+  {"d":"11-01","ped":2,"rec":139.75,"cogs":62.35,"ads":40.14,"lucro":37.26,"margem":26.7,"cpa":20.07,"org":false},
+  {"d":"11-02","ped":1,"rec":73.83,"cogs":46.67,"ads":44.4,"lucro":-17.24,"margem":-23.4,"cpa":44.4,"org":false},
+  {"d":"11-03","ped":1,"rec":94.98,"cogs":50.29,"ads":66.89,"lucro":-22.2,"margem":-23.4,"cpa":66.89,"org":false},
+  {"d":"11-04","ped":1,"rec":90.75,"cogs":39.46,"ads":80.49,"lucro":-29.2,"margem":-32.2,"cpa":80.49,"org":false},
+  {"d":"11-05","ped":1,"rec":80.31,"cogs":31.41,"ads":75.19,"lucro":-26.29,"margem":-32.7,"cpa":75.19,"org":false},
+  {"d":"11-06","ped":1,"rec":138.6,"cogs":88.26,"ads":55.38,"lucro":-5.04,"margem":-3.6,"cpa":55.38,"org":false},
+  {"d":"11-07","ped":5,"rec":392.7,"cogs":199.95,"ads":64.29,"lucro":128.46,"margem":32.7,"cpa":12.86,"org":false},
+  {"d":"11-08","ped":4,"rec":368.61,"cogs":164.46,"ads":98.83,"lucro":105.32,"margem":28.6,"cpa":24.71,"org":false},
+  {"d":"11-09","ped":1,"rec":80.31,"cogs":41.72,"ads":51.24,"lucro":-12.65,"margem":-15.8,"cpa":51.24,"org":false}
 ]
