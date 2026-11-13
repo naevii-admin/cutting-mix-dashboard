@@ -29,5 +29,8 @@
   {"d":"11-06","ped":1,"rec":138.6,"cogs":88.26,"ads":55.38,"lucro":-5.04,"margem":-3.6,"cpa":55.38,"org":false},
   {"d":"11-07","ped":5,"rec":392.7,"cogs":203.16,"ads":64.29,"lucro":125.25,"margem":31.9,"cpa":12.86,"org":false},
   {"d":"11-08","ped":4,"rec":368.61,"cogs":232.59,"ads":98.83,"lucro":37.19,"margem":10.1,"cpa":24.71,"org":false},
-  {"d":"11-09","ped":3,"rec":371.65,"cogs":168.54,"ads":90.11,"lucro":113.0,"margem":30.4,"cpa":30.04,"org":false}
+  {"d":"11-09","ped":3,"rec":371.65,"cogs":208.88,"ads":90.11,"lucro":72.66,"margem":19.6,"cpa":30.04,"org":false},
+  {"d":"11-10","ped":2,"rec":159.35,"cogs":91.75,"ads":122.28,"lucro":-54.68,"margem":-34.3,"cpa":61.14,"org":false},
+  {"d":"11-11","ped":5,"rec":451.21,"cogs":283.38,"ads":83.06,"lucro":84.77,"margem":18.8,"cpa":16.61,"org":false},
+  {"d":"11-12","ped":3,"rec":439.16,"cogs":201.17,"ads":64.74,"lucro":173.25,"margem":39.5,"cpa":21.58,"org":false}
 ]
